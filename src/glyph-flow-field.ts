@@ -1,4 +1,4 @@
-import { Resvg } from '@resvg/resvg-js';
+import type { SvgRasteriser } from './svg-rasteriser';
 
 /** A glyph's shape rasterised to canvas pixels, with the direction its path runs at every pixel. */
 export type GlyphFlowField = {
@@ -18,15 +18,17 @@ const ALPHA_THRESHOLD = 127;
  * Rasterises white glyph markup and derives which way its path runs everywhere inside it,
  * so strokes can be painted along the glyph's own lines.
  * @param shapeMarkup - SVG markup in canvas coordinates that paints the glyph opaque.
+ * @param rasteriser - Renders the shape so its pixels can be read.
  * @throws When `canvasSize` is not a positive integer.
  */
 export function buildGlyphFlowField(
 	shapeMarkup: string,
 	canvasSize: number,
+	rasteriser: SvgRasteriser,
 ): GlyphFlowField {
 	if (!Number.isInteger(canvasSize) || canvasSize <= 0)
 		throw new Error(`canvasSize must be a positive integer, got ${canvasSize}`);
-	const insideMask = rasteriseInsideMask(shapeMarkup, canvasSize);
+	const insideMask = rasteriseInsideMask(shapeMarkup, canvasSize, rasteriser);
 	const edgeDistances = measureEdgeDistances(insideMask, canvasSize);
 	return {
 		size: canvasSize,
@@ -35,11 +37,15 @@ export function buildGlyphFlowField(
 	};
 }
 
-function rasteriseInsideMask(shapeMarkup: string, size: number): Uint8Array {
-	// `pixels` copies the whole buffer on every read, so read it once.
-	const pixels = new Resvg(
+function rasteriseInsideMask(
+	shapeMarkup: string,
+	size: number,
+	rasteriser: SvgRasteriser,
+): Uint8Array {
+	const pixels = rasteriser.renderRgba(
 		`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">${shapeMarkup}</svg>`,
-	).render().pixels;
+		size,
+	);
 	return Uint8Array.from({ length: size * size }, (_, index) =>
 		(pixels[index * 4 + 3] ?? 0) > ALPHA_THRESHOLD ? 1 : 0,
 	);

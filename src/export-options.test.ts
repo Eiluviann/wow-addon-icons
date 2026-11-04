@@ -1,8 +1,9 @@
-import { faBug } from '@fortawesome/pro-regular-svg-icons';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_EXPORT_SIZES, resolveExportOptions } from './export-options';
+import { resolveExportOptions } from './export-options';
 import { fromFontAwesome } from './glyph';
 import { ICON_GROUPS } from './icon-groups';
+import { DEFAULT_EXPORT_SIZES } from './render-png';
 
 describe('resolveExportOptions', () => {
 	it('defaults to every group at every default size', () => {

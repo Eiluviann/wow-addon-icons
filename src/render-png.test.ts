@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MIN_EXPORT_SIZE, renderPng, validateExportSize } from './render-png';
+import { RESVG_NODE_RASTERISER } from './resvg-node-rasteriser';
 
 const SQUARE_SVG =
 	'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10"/></svg>';
@@ -24,12 +25,14 @@ describe('validateExportSize', () => {
 
 describe('renderPng', () => {
 	it.each([150, 256, 512])('renders a %ipx square PNG', (size) => {
-		const png = renderPng(SQUARE_SVG, size);
+		const png = renderPng(SQUARE_SVG, size, RESVG_NODE_RASTERISER);
 		expect([...png.slice(1, 4)]).toEqual([0x50, 0x4e, 0x47]);
 		expect(readPngDimensions(png)).toEqual({ width: size, height: size });
 	});
 
 	it('throws for a size below the minimum', () => {
-		expect(() => renderPng(SQUARE_SVG, 100)).toThrow(/minimum/);
+		expect(() => renderPng(SQUARE_SVG, 100, RESVG_NODE_RASTERISER)).toThrow(
+			/minimum/,
+		);
 	});
 });

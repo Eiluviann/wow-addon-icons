@@ -6,6 +6,7 @@ import {
 	buildTracedGlyphBrushwork,
 } from './brushwork';
 import { buildGlyphFlowField } from './glyph-flow-field';
+import { RESVG_NODE_RASTERISER } from './resvg-node-rasteriser';
 
 describe('brushwork', () => {
 	const panelArea = {
@@ -55,6 +56,7 @@ describe('brushwork', () => {
 		const horizontalBar = buildGlyphFlowField(
 			'<rect x="100" y="240" width="300" height="30" fill="#fff"/>',
 			512,
+			RESVG_NODE_RASTERISER,
 		);
 		const strokes = buildTracedGlyphBrushwork(
 			{ ...panelArea, outerExtent: 150, isCircular: false },
@@ -83,7 +85,7 @@ describe('brushwork', () => {
 	});
 
 	it('rejects a flow field with no glyph pixels', () => {
-		const emptyField = buildGlyphFlowField('', 64);
+		const emptyField = buildGlyphFlowField('', 64, RESVG_NODE_RASTERISER);
 		expect(() =>
 			buildTracedGlyphBrushwork(panelArea, emptyField, 1, {
 				scale: 1,

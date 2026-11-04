@@ -3,10 +3,11 @@ import { join } from 'node:path';
 import type { BrushTipImage } from './brush-tip-image';
 import { buildIconSvg } from './build-icon-svg';
 import { type ExportOptions, resolveExportOptions } from './export-options';
-import type { IconGroup } from './icon-groups';
+import type { IconGroup } from './icon-group';
 import { loadBrushTips } from './load-brush-tips';
 import { renderPng } from './render-png';
 import { succeed } from './result';
+import { RESVG_NODE_RASTERISER } from './resvg-node-rasteriser';
 import { MEDALLION_THEME } from './theme';
 
 await main();
@@ -47,13 +48,16 @@ async function exportIcons(
 		),
 	);
 	const writes = iconGroups.flatMap((iconGroup) => {
-		const svg = buildIconSvg(iconGroup, MEDALLION_THEME, brushTips);
+		const svg = buildIconSvg(iconGroup, MEDALLION_THEME, {
+			brushTips,
+			rasteriser: RESVG_NODE_RASTERISER,
+		});
 		return [
 			writeFile(join(outputDirectory, 'svg', `${iconGroup.slug}.svg`), svg),
 			...sizes.map((size) =>
 				writeFile(
 					join(outputDirectory, String(size), `${iconGroup.slug}.png`),
-					renderPng(svg, size),
+					renderPng(svg, size, RESVG_NODE_RASTERISER),
 				),
 			),
 		];
@@ -91,7 +95,7 @@ section{margin-bottom:28px}footer{opacity:.6;font-size:12px}a{color:inherit}h2{f
 .sizes{display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap}
 </style></head><body>
 ${rows}
-<footer>Some glyphs by Lorc, Delapouite and contributors from <a href="https://game-icons.net">game-icons.net</a>, CC BY 3.0.</footer>
+<footer>Some glyphs by Lorc, Delapouite and contributors from <a href="https://game-icons.net">game-icons.net</a>, CC BY 3.0. Font Awesome Free icons, CC BY 4.0.</footer>
 </body></html>
 `;
 }

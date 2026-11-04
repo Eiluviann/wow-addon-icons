@@ -4,25 +4,31 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@fortawesome/fontawesome-common-types': file:./vendor/fortawesome-fontawesome-common-types-7.3.0.tgz
-
 importers:
 
   .:
     dependencies:
       '@fortawesome/fontawesome-common-types':
-        specifier: file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz
-        version: file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz
-      '@fortawesome/pro-regular-svg-icons':
-        specifier: file:./vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz
-        version: file:vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz
+        specifier: ^7.3.1
+        version: 7.3.1
+      '@fortawesome/free-regular-svg-icons':
+        specifier: ^7.3.1
+        version: 7.3.1
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^7.3.1
+        version: 7.3.1
       '@iconify-json/game-icons':
         specifier: ^1.2.4
         version: 1.2.4
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
     devDependencies:
       '@biomejs/biome':
         specifier: ~2.5.0
@@ -33,6 +39,9 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      vite:
+        specifier: ^8.3.5
+        version: 8.3.5(@types/node@26.6.6)
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6))
@@ -96,14 +105,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fortawesome/fontawesome-common-types@file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz':
-    resolution: {integrity: sha512-X/vND0Y1l9fVJ9O79UgtZnXSpz4aNF3bXlDxiJAEAm6kgeSftp9wjjBPgqzazJV8YlmxfRoeXNfSCJ48sf/Hhw==, tarball: file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz}
-    version: 7.3.0
+  '@fortawesome/fontawesome-common-types@7.3.1':
+    resolution: {integrity: sha512-k0C0sdHmZtAo6dRDtd1Z/qcpyHbL0CKsjV8seMY/21xGhY5Wsv0XRmiI/xEEH4y2c9b1+jvgNs/3EqhV27yUEA==}
     engines: {node: '>=6'}
 
-  '@fortawesome/pro-regular-svg-icons@file:vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz':
-    resolution: {integrity: sha512-yXDwyqPNISZSmbN9HTL7rZD3G4FCzaXb4OPI119zhe4qqp6SNsN3Xj0rZT/pNUWKCDM9wqvAZvZiVlgKDoqxNQ==, tarball: file:vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz}
-    version: 7.3.0
+  '@fortawesome/free-regular-svg-icons@7.3.1':
+    resolution: {integrity: sha512-q1EsmL7Q8DDnkRBUjSvrxbq7c9oVwwVjCn/xa5apKmdp65YSgzUg2y0Ltnd5aDbT6GdAQQdXql5Ha90ArqIReQ==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/free-solid-svg-icons@7.3.1':
+    resolution: {integrity: sha512-v0BLa0eqg7ubvVWeNSHVBs8fWH/GJicERZoJaxJ3FE/lj67VSqzoMg9pzfZVOfLMX10y0pGwQAuxoRVVH2patg==}
     engines: {node: '>=6'}
 
   '@iconify-json/game-icons@1.2.4':
@@ -203,6 +214,10 @@ packages:
 
   '@resvg/resvg-js@2.6.2':
     resolution: {integrity: sha512-xBaJish5OeGmniDj9cW5PRa/PtmuVU3ziqrbr5xJj901ZDN4TosrVaNZpEiLZAxdfnhAe7uQ7QFWfjPe9d9K2Q==}
+    engines: {node: '>= 10'}
+
+  '@resvg/resvg-wasm@2.6.2':
+    resolution: {integrity: sha512-FqALmHI8D4o6lk/LRWDnhw95z5eO+eAa6ORjVg09YRR7BkcM6oPHU9uyC0gtQG5vpFLvgpeU4+zEAz2H8APHNw==}
     engines: {node: '>= 10'}
 
   '@rolldown/binding-android-arm-eabi@1.2.16':
@@ -481,6 +496,9 @@ packages:
       picomatch:
         optional: true
 
+  fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -741,11 +759,15 @@ snapshots:
   '@biomejs/cli-win32-x64@2.5.15':
     optional: true
 
-  '@fortawesome/fontawesome-common-types@file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz': {}
+  '@fortawesome/fontawesome-common-types@7.3.1': {}
 
-  '@fortawesome/pro-regular-svg-icons@file:vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz':
+  '@fortawesome/free-regular-svg-icons@7.3.1':
     dependencies:
-      '@fortawesome/fontawesome-common-types': file:vendor/fortawesome-fontawesome-common-types-7.3.0.tgz
+      '@fortawesome/fontawesome-common-types': 7.3.1
+
+  '@fortawesome/free-solid-svg-icons@7.3.1':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 7.3.1
 
   '@iconify-json/game-icons@1.2.4':
     dependencies:
@@ -814,6 +836,8 @@ snapshots:
       '@resvg/resvg-js-win32-arm64-msvc': 2.6.2
       '@resvg/resvg-js-win32-ia32-msvc': 2.6.2
       '@resvg/resvg-js-win32-x64-msvc': 2.6.2
+
+  '@resvg/resvg-wasm@2.6.2': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.16':
     optional: true
@@ -963,6 +987,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fflate@0.8.3: {}
 
   fsevents@2.3.3:
     optional: true

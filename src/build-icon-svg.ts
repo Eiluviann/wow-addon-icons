@@ -10,7 +10,8 @@ import {
 } from './brushwork';
 import type { Glyph } from './glyph';
 import { buildGlyphFlowField } from './glyph-flow-field';
-import type { IconGroup } from './icon-groups';
+import type { IconGroup } from './icon-group';
+import type { SvgRasteriser } from './svg-rasteriser';
 import {
 	deriveGroupPalette,
 	type GlyphBevel,
@@ -71,17 +72,24 @@ const TEXTURE_NOISE = {
 	},
 } as const satisfies Record<OverlayTexture, TextureNoise>;
 
+/** What an icon is painted with beyond its group and theme. */
+export type IconPaintKit = {
+	/** Tips loaded from a brush file; when empty or absent, the built-in procedural brush paints. */
+	brushTips?: readonly BrushTipImage[];
+	/** Needed only when the theme traces glyph strokes, which reads the glyph's pixels. */
+	rasteriser?: SvgRasteriser;
+};
+
 /**
  * Builds the full icon as an SVG document: a gold-framed tile tinted by the group's hue,
- * with its Font Awesome glyph centred on top.
- * @param brushTips - Tips loaded from the theme's brush file; when empty, the 'strokes' texture
- * paints with the built-in procedural brush.
- * @throws When the hue is outside 0–360 or `theme.brushScale` is not positive.
+ * with its glyph centred on top.
+ * @throws When the hue is outside 0–360, `theme.brushScale` is not positive, or the theme traces
+ * glyph strokes and no rasteriser is given.
  */
 export function buildIconSvg(
 	iconGroup: IconGroup,
 	theme: Theme,
-	brushTips: readonly BrushTipImage[] = [],
+	{ brushTips = [], rasteriser }: IconPaintKit = {},
 ): string {
 	const palette = deriveGroupPalette(iconGroup.hue);
 	const { canvasSize } = theme;
@@ -90,7 +98,13 @@ export function buildIconSvg(
 		`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasSize}" height="${canvasSize}" viewBox="${buildPaddedViewBox(theme)}">`,
 		buildDefinitions(theme, palette, Math.round(iconGroup.hue), brush),
 		buildPanel(theme, iconGroup.hue, brush),
-		buildGlyph(iconGroup.glyph, theme, Math.round(iconGroup.hue), brush),
+		buildGlyph(
+			iconGroup.glyph,
+			theme,
+			Math.round(iconGroup.hue),
+			brush,
+			rasteriser,
+		),
 		buildFrame(theme, Math.round(iconGroup.hue), brush),
 		'</svg>',
 	].join('\n');
@@ -323,6 +337,7 @@ function buildGlyph(
 	theme: Theme,
 	seed: number,
 	brush: Brush,
+	rasteriser: SvgRasteriser | undefined,
 ): string {
 	const placement = computeGlyphPlacement(glyph.width, glyph.height, theme);
 	const paths = glyph.paths.map((path) => `<path d="${path}"/>`).join('');
@@ -342,6 +357,7 @@ function buildGlyph(
 					placement,
 					seed,
 					brush,
+					rasteriser,
 				)
 			: glyphShape;
 	// Filters sit on untransformed wrapper groups so their radii are in canvas pixels, not glyph units.
@@ -357,6 +373,7 @@ function buildPaintedGlyph(
 	placement: GlyphPlacement,
 	seed: number,
 	brush: Brush,
+	rasteriser: SvgRasteriser | undefined,
 ): string {
 	assertStrokeDepth('glyphStrokeDepth', theme.glyphStrokeDepth);
 	const area: BrushworkArea = {
@@ -369,11 +386,13 @@ function buildPaintedGlyph(
 	};
 	const maskShape = `<g fill="#fff"${buildGlyphOutline(theme, '#fff')} transform="${transform}">${paths}</g>`;
 	const strokeSeed = seed + GLYPH_STROKE_SEED_OFFSET;
+	if (theme.glyphStrokeFlow === 'traced' && rasteriser === undefined)
+		throw new Error('Traced glyph strokes need a rasteriser');
 	const strokes =
-		theme.glyphStrokeFlow === 'traced'
+		theme.glyphStrokeFlow === 'traced' && rasteriser !== undefined
 			? buildTracedGlyphBrushwork(
 					area,
-					buildGlyphFlowField(maskShape, theme.canvasSize),
+					buildGlyphFlowField(maskShape, theme.canvasSize, rasteriser),
 					strokeSeed,
 					brush,
 				)

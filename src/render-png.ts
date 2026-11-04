@@ -1,7 +1,8 @@
-import { Resvg } from '@resvg/resvg-js';
 import { fail, type Result, succeed } from './result';
+import type { SvgRasteriser } from './svg-rasteriser';
 
 export const MIN_EXPORT_SIZE = 150;
+export const DEFAULT_EXPORT_SIZES = [150, 256, 512] as const;
 
 /**
  * Checks a requested export size: a whole number of pixels, at least `MIN_EXPORT_SIZE`.
@@ -21,10 +22,12 @@ export function validateExportSize(size: number): Result<number> {
  * Rasterises a square SVG to a PNG of `size`×`size` pixels.
  * @throws When `size` fails `validateExportSize`; check it first.
  */
-export function renderPng(svg: string, size: number): Uint8Array {
+export function renderPng(
+	svg: string,
+	size: number,
+	rasteriser: SvgRasteriser,
+): Uint8Array {
 	const sizeResult = validateExportSize(size);
 	if (!sizeResult.ok) throw sizeResult.error;
-	return new Resvg(svg, { fitTo: { mode: 'width', value: size } })
-		.render()
-		.asPng();
+	return rasteriser.renderPng(svg, size);
 }

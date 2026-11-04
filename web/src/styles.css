@@ -1,0 +1,406 @@
+:root {
+	--background: #14110d;
+	--surface: #1d1913;
+	--border: #3a3124;
+	--text: #eadfc4;
+	--text-muted: #a99c80;
+	--gold: #d9b45a;
+	--gold-strong: #f0cf7a;
+	--danger: #e0796b;
+	--radius: 10px;
+	color-scheme: dark;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: radial-gradient(
+			circle at 50% -20%,
+			#2b2216,
+			var(--background) 60%
+		)
+		fixed;
+	color: var(--text);
+	font:
+		14px / 1.45 system-ui,
+		-apple-system,
+		"Segoe UI",
+		sans-serif;
+}
+
+h1,
+h2 {
+	margin: 0;
+	font-family: Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+h1 {
+	font-size: 22px;
+	color: var(--gold-strong);
+}
+
+h2 {
+	font-size: 15px;
+	color: var(--gold);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+a {
+	color: var(--gold);
+}
+
+.shell {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 16px;
+	display: grid;
+	gap: 16px;
+}
+
+.app-header {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.workspace {
+	display: grid;
+	grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(
+			220px,
+			260px
+		);
+	gap: 16px;
+	align-items: start;
+}
+
+@media (max-width: 960px) {
+	.workspace {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.panel {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 16px;
+	display: grid;
+	gap: 12px;
+}
+
+.row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.stack {
+	display: grid;
+	gap: 8px;
+}
+
+.muted {
+	color: var(--text-muted);
+}
+
+.error,
+.field-error {
+	color: var(--danger);
+}
+
+button,
+.button {
+	font: inherit;
+	color: var(--text);
+	background: #2c2519;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 7px 12px;
+	cursor: pointer;
+	text-align: center;
+}
+
+button:hover,
+.button:hover {
+	border-color: var(--gold);
+}
+
+button:focus-visible,
+.button:focus-within,
+input:focus-visible,
+select:focus-visible {
+	outline: 2px solid var(--gold);
+	outline-offset: 2px;
+}
+
+button.primary {
+	background: linear-gradient(#e2bf66, #b38a35);
+	color: #1b140a;
+	border-color: #f0cf7a;
+	font-weight: 600;
+}
+
+button.ghost,
+.button.ghost {
+	background: transparent;
+}
+
+button.danger:hover {
+	border-color: var(--danger);
+	color: var(--danger);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="search"],
+select {
+	font: inherit;
+	color: var(--text);
+	background: #120f0b;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 7px 10px;
+	min-width: 0;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+.brush-panel {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 6px 6px 6px 12px;
+}
+
+.label {
+	color: var(--text-muted);
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.group-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 6px;
+}
+
+.group-row,
+.glyph-button {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	width: 100%;
+	text-align: left;
+	padding: 6px;
+	background: transparent;
+}
+
+.group-row[aria-pressed="true"] {
+	border-color: var(--gold);
+	background: #2c2519;
+}
+
+.group-row img {
+	width: 48px;
+	height: 48px;
+	flex: none;
+}
+
+.group-text {
+	display: grid;
+	min-width: 0;
+}
+
+.group-text strong,
+.group-text small {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.group-text small {
+	color: var(--text-muted);
+}
+
+.is-rendering {
+	opacity: 0.55;
+	transition: opacity 0.2s;
+}
+
+.editor {
+	grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+	align-items: start;
+}
+
+@media (max-width: 720px) {
+	.editor {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.preview-frame {
+	display: grid;
+	place-items: center;
+	background:
+		repeating-conic-gradient(#1a1610 0 25%, #211b14 0 50%) 0 0 / 24px 24px;
+	border-radius: var(--radius);
+	aspect-ratio: 1;
+}
+
+.preview {
+	width: min(100%, 384px);
+	height: auto;
+}
+
+.fields {
+	display: grid;
+	gap: 14px;
+}
+
+.field {
+	display: grid;
+	gap: 4px;
+}
+
+input[type="range"] {
+	flex: 1;
+	min-width: 120px;
+	accent-color: hsl(var(--hue, 40) 70% 55%);
+}
+
+.hue-number {
+	width: 72px;
+}
+
+.glyph-button svg {
+	width: 40px;
+	height: 40px;
+	color: var(--gold);
+	flex: none;
+}
+
+.size-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.size-toggle {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+.export-panel input[type="number"] {
+	flex: 1;
+	width: 0;
+}
+
+.export-status,
+.set-message {
+	margin: 0;
+	min-height: 1.4em;
+	color: var(--text-muted);
+}
+
+.app-footer {
+	color: var(--text-muted);
+	font-size: 12px;
+}
+
+.app-footer p {
+	margin: 4px 0;
+}
+
+.glyph-picker {
+	width: min(960px, calc(100vw - 32px));
+	height: min(720px, calc(100vh - 32px));
+	padding: 16px;
+	background: var(--surface);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+.glyph-picker[open] {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr);
+	gap: 10px;
+}
+
+.glyph-picker::backdrop {
+	background: #000a;
+}
+
+.picker-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.picker-toolbar input[type="search"] {
+	flex: 1 1 240px;
+}
+
+.picker-status {
+	margin: 0;
+	color: var(--text-muted);
+}
+
+.glyph-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+	gap: 8px;
+	overflow-y: auto;
+	align-content: start;
+}
+
+.glyph-tile {
+	display: grid;
+	justify-items: center;
+	gap: 6px;
+	padding: 10px 6px;
+	background: #16120d;
+}
+
+.glyph-tile svg {
+	width: 44px;
+	height: 44px;
+	color: var(--gold);
+}
+
+.glyph-tile span {
+	font-size: 11px;
+	color: var(--text-muted);
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

@@ -1,4 +1,4 @@
-import { deflateSync } from 'node:zlib';
+import { zlibSync } from 'fflate';
 import type { BrushTip } from './abr-brush-file';
 
 /** A brush tip ready to embed: lying along the x axis, downscaled, as a white PNG whose alpha is the paint. */
@@ -42,7 +42,7 @@ export function prepareBrushTipImage(
 	return {
 		width: scaledTip.width,
 		height: scaledTip.height,
-		dataUri: `data:image/png;base64,${Buffer.from(encodeWhitePng(scaledTip)).toString('base64')}`,
+		dataUri: `data:image/png;base64,${encodeBase64(encodeWhitePng(scaledTip))}`,
 	};
 }
 
@@ -122,7 +122,7 @@ function encodeWhitePng({ width, height, opacity }: BrushTip): Uint8Array {
 	return concatenateBytes([
 		PNG_SIGNATURE,
 		buildPngChunk('IHDR', header),
-		buildPngChunk('IDAT', deflateSync(scanlines)),
+		buildPngChunk('IDAT', zlibSync(scanlines)),
 		buildPngChunk('IEND', new Uint8Array(0)),
 	]);
 }
@@ -170,4 +170,16 @@ function buildCrcTable(): Uint32Array {
 		}
 		return value >>> 0;
 	});
+}
+
+// btoa takes a binary string; chunks keep the spread under the engine's argument limit.
+function encodeBase64(bytes: Uint8Array): string {
+	const ChunkLength = 0x8000;
+	let binary = '';
+	for (let offset = 0; offset < bytes.length; offset += ChunkLength) {
+		binary += String.fromCharCode(
+			...bytes.subarray(offset, offset + ChunkLength),
+		);
+	}
+	return btoa(binary);
 }

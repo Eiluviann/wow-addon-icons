@@ -1,7 +1,9 @@
-import { faBug } from '@fortawesome/pro-regular-svg-icons';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { describe, expect, it } from 'vitest';
 import { buildIconSvg } from './build-icon-svg';
-import { fromFontAwesome, gameIcon } from './glyph';
+import { gameIcon } from './game-icon-glyph';
+import { fromFontAwesome } from './glyph';
+import { RESVG_NODE_RASTERISER } from './resvg-node-rasteriser';
 import { DEFAULT_THEME, deriveGroupPalette, MEDALLION_THEME } from './theme';
 
 describe('buildIconSvg', () => {
@@ -229,12 +231,21 @@ describe('buildIconSvg', () => {
 			...MEDALLION_THEME,
 			glyphStrokeFlow: 'field',
 		});
-		const tracedSvg = buildIconSvg(debuggingGroup, MEDALLION_THEME);
+		const paintKit = { rasteriser: RESVG_NODE_RASTERISER };
+		const tracedSvg = buildIconSvg(debuggingGroup, MEDALLION_THEME, paintKit);
 		const glyphStrokes = (svg: string) =>
 			svg.match(/<g mask="url\(#glyph-mask\)">[\s\S]*?\n<\/g>/)?.[0];
 		expect(glyphStrokes(tracedSvg)).toContain('<use href="#brush-stamp-');
 		expect(glyphStrokes(tracedSvg)).not.toEqual(glyphStrokes(fieldSvg));
-		expect(buildIconSvg(debuggingGroup, MEDALLION_THEME)).toEqual(tracedSvg);
+		expect(buildIconSvg(debuggingGroup, MEDALLION_THEME, paintKit)).toEqual(
+			tracedSvg,
+		);
+	});
+
+	it('rejects traced glyph strokes without a rasteriser', () => {
+		expect(() => buildIconSvg(debuggingGroup, MEDALLION_THEME)).toThrow(
+			/rasteriser/,
+		);
 	});
 
 	it('rejects a non-positive brush scale', () => {

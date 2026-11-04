@@ -1,6 +1,7 @@
 import { parseArgs } from 'node:util';
-import { ICON_GROUPS, type IconGroup, validateIconGroups } from './icon-groups';
-import { validateExportSize } from './render-png';
+import { type IconGroup, validateIconGroups } from './icon-group';
+import { ICON_GROUPS } from './icon-groups';
+import { DEFAULT_EXPORT_SIZES, validateExportSize } from './render-png';
 import { fail, type Result, succeed } from './result';
 
 /** What one export run renders, and where it writes. */
@@ -12,7 +13,6 @@ export type ExportOptions = {
 	brushFile: string | undefined;
 };
 
-export const DEFAULT_EXPORT_SIZES = [150, 256, 512] as const;
 export const OUTPUT_DIRECTORY = 'dist';
 
 /**
