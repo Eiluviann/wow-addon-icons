@@ -139,6 +139,19 @@ describe('buildIconSvg', () => {
 		).toThrow(/panelStrokeDepth/);
 	});
 
+	it('pads the canvas so the icon fills the given share of the image', () => {
+		const fullSvg = buildIconSvg(debuggingGroup, DEFAULT_THEME);
+		const paddedSvg = buildIconSvg(debuggingGroup, {
+			...DEFAULT_THEME,
+			iconFill: 0.8,
+		});
+		expect(fullSvg).toContain('viewBox="0 0 512 512"');
+		expect(paddedSvg).toContain('viewBox="-64 -64 640 640"');
+		expect(() =>
+			buildIconSvg(debuggingGroup, { ...DEFAULT_THEME, iconFill: 0 }),
+		).toThrow(/iconFill/);
+	});
+
 	it('scales the glyph stroke depth apart from the frame', () => {
 		const strokesTheme = {
 			...DEFAULT_THEME,

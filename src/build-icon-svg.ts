@@ -87,7 +87,7 @@ export function buildIconSvg(
 	const { canvasSize } = theme;
 	const brush = { scale: theme.brushScale, tips: brushTips };
 	return [
-		`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasSize}" height="${canvasSize}" viewBox="0 0 ${canvasSize} ${canvasSize}">`,
+		`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasSize}" height="${canvasSize}" viewBox="${buildPaddedViewBox(theme)}">`,
 		buildDefinitions(theme, palette, Math.round(iconGroup.hue), brush),
 		buildPanel(theme, iconGroup.hue, brush),
 		buildGlyph(iconGroup.glyph, theme, Math.round(iconGroup.hue), brush),
@@ -530,6 +530,15 @@ function wrapDepthStrokes(
 function assertStrokeDepth(tokenName: string, depth: number): void {
 	if (!Number.isFinite(depth) || depth < 0 || depth > 1)
 		throw new Error(`${tokenName} must be within 0–1, got ${depth}`);
+}
+
+// Widens the view around the 0–canvasSize drawing, so the icon keeps its coordinates and shrinks into the margin.
+function buildPaddedViewBox({ canvasSize, iconFill }: Theme): string {
+	if (!Number.isFinite(iconFill) || iconFill <= 0 || iconFill > 1)
+		throw new Error(`iconFill must be within (0, 1], got ${iconFill}`);
+	const margin = (canvasSize / iconFill - canvasSize) / 2;
+	const viewSize = canvasSize + margin * 2;
+	return [-margin, -margin, viewSize, viewSize].map(formatNumber).join(' ');
 }
 
 function isCircle(square: RoundedSquare): boolean {

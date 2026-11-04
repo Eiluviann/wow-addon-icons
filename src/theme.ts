@@ -22,6 +22,8 @@ export type PanelTexture =
 /** Shared visual tokens for every icon. Tinting per group comes from `deriveGroupPalette`. */
 export type Theme = {
 	canvasSize: number;
+	/** Share of the exported image the icon spans, (0, 1]: below 1 leaves a transparent margin. */
+	iconFill: number;
 	outerCornerRadius: number;
 	borderWidth: number;
 	innerCornerRadius: number;
@@ -66,6 +68,7 @@ export type GroupPalette = {
 
 export const DEFAULT_THEME = {
 	canvasSize: 512,
+	iconFill: 1,
 	outerCornerRadius: 64,
 	borderWidth: 26,
 	innerCornerRadius: 42,
@@ -110,6 +113,7 @@ export const MEDALLION_THEME = {
 	panelStrokeDepth: 0.3,
 	glyphStrokeDepth: 0.3,
 	glyphStrokeFlow: 'traced',
+	iconFill: 0.8,
 } as const satisfies Theme;
 
 /**
