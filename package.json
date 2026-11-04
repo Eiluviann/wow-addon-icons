@@ -1,0 +1,24 @@
+{
+	"name": "wow-addon-icons",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"export": "bun src/export-icons.ts",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"lint": "biome check src"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "~2.5.0",
+		"@types/node": "^26.6.6",
+		"typescript": "^7.0.2",
+		"vitest": "^5.1.0"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-common-types": "file:./vendor/fortawesome-fontawesome-common-types-7.3.0.tgz",
+		"@fortawesome/pro-regular-svg-icons": "file:./vendor/fortawesome-pro-regular-svg-icons-7.3.0.tgz",
+		"@iconify-json/game-icons": "^1.2.4",
+		"@resvg/resvg-js": "^2.6.2"
+	}
+}
